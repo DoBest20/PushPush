@@ -1,4 +1,4 @@
-JSON = "../game_data/map2.json"
+JSON = "../game_data/map1.json"
 IP = "127.0.0.1"
 PORT = "9990"
 

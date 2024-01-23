@@ -97,6 +97,7 @@ int loadJson()
 //disconnected: check if any user is disconnected, handel clnt_cnt
 void disconnected(int sock)
 {
+	fprintf(stderr,"This is disconntected\n");
 	pthread_mutex_lock(&mutx);
 	for (int i = 0; i < clnt_cnt; i++)   // remove disconnected client
 	{
@@ -119,6 +120,11 @@ void disconnected(int sock)
 	}
 	pthread_mutex_unlock(&mutx);
 	close(sock);
+
+	int end_thread;
+	pthread_exit((void *)&end_thread);
+
+	
 }
 
 //write_byte: write datas to socket, guarantee that all the byte is sent. 
@@ -130,13 +136,10 @@ int write_byte(int sock, void * buf, int size)
 	while(write_size < size)
 	{
 		str_len = write(sock, buf + write_size, size - write_size);
-		if( str_len == 0)
+		if(str_len == -1)
 		{
+			perror("write: ");
 			return 0;
-		}
-		if( str_len == -1)
-		{
-			disconnected(sock);
 		}
 		write_size += str_len;
 	}
@@ -151,14 +154,10 @@ int read_byte(int sock, void * buf, int size)
 	while(read_size < size)
 	{
 		str_len = read(sock, buf + read_size, size - read_size);
-		if( str_len == 0)
+		if( str_len == 0 || str_len == -1)
 		{
 			disconnected(sock);
 			return 0;
-		}
-		if( str_len == -1)
-		{
-
 		}
 		read_size += str_len;
 	}
