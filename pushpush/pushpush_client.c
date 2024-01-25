@@ -104,7 +104,7 @@ void update_cell();
 int item_idxToId(int idx);
 int item_idToIdx(int id);
 void score_up(int user_idx);
-gboolean handle_cmd(gpointer user_data) ;
+gboolean handle_cmd() ;
 
 //for networking
 int recv_bytes(int sock_fd, void * buf, size_t len);
@@ -227,7 +227,7 @@ int main(int argc, char *argv[]) {
 	alarm(Model.timeout);
 
 	pthread_create(&rcv_thread, NULL, recv_msg, (void*)&sock);
-	g_timeout_add(50,handle_cmd, NULL);
+	g_timeout_add(50,handle_cmd,NULL);
 	
   	gtk_main(); //enter the GTK main loop
 
@@ -783,7 +783,7 @@ int send_bytes(int sock_fd, void * buf, size_t len){
     return 0;
 }
 
-gboolean handle_cmd(gpointer user_data) {
+gboolean handle_cmd() {
 	int event;
     pthread_mutex_lock(&mutx);
 	if(rear == front)
